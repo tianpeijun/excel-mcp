@@ -1,0 +1,115 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Time API",
+    "description": "Get current time by coordinates",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://www.timeapi.io/api",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/Time/current/coordinate": {
+      "get": {
+        "summary": "Get current time by coordinates",
+        "operationId": "getCurrentTimeByCoordinate",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "default": 31.2304
+            },
+            "description": "Latitude (e.g., 31.2304 for Shanghai)"
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "default": 121.4737
+            },
+            "description": "Longitude (e.g., 121.4737 for Shanghai)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TimeResponse": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "description": "Year"
+          },
+          "month": {
+            "type": "integer",
+            "description": "Month (1-12)"
+          },
+          "day": {
+            "type": "integer",
+            "description": "Day of month"
+          },
+          "hour": {
+            "type": "integer",
+            "description": "Hour (0-23)"
+          },
+          "minute": {
+            "type": "integer",
+            "description": "Minute"
+          },
+          "seconds": {
+            "type": "integer",
+            "description": "Seconds"
+          },
+          "dateTime": {
+            "type": "string",
+            "description": "Full datetime string"
+          },
+          "date": {
+            "type": "string",
+            "description": "Date string (MM/DD/YYYY)"
+          },
+          "time": {
+            "type": "string",
+            "description": "Time string (HH:MM)"
+          },
+          "timeZone": {
+            "type": "string",
+            "description": "Timezone name"
+          },
+          "dayOfWeek": {
+            "type": "string",
+            "description": "Day of week"
+          },
+          "dstActive": {
+            "type": "boolean",
+            "description": "Daylight saving time active"
+          }
+        }
+      }
+    },
+    "securitySchemes": {}
+  },
+  "security": []
+}

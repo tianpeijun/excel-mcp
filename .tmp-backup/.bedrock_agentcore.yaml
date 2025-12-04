@@ -7,15 +7,15 @@ agents:
     runtime_type: PYTHON_3_11
     platform: linux/arm64
     container_runtime: null
-    source_path: ./mcp-server
+    source_path: /Users/peijun/excel-mcp/mcp-server
     aws:
-      execution_role: arn:aws:iam::{account-id}:role/{your-execution-role}
+      execution_role: arn:aws:iam::418295705866:role/AmazonBedrockAgentCoreSDKRuntime-us-east-1-df8e088a86
       execution_role_auto_create: false
-      account: '{account-id}'
+      account: '418295705866'
       region: us-east-1
       ecr_repository: null
       ecr_auto_create: false
-      s3_path: s3://{your-s3-bucket}
+      s3_path: s3://bedrock-agentcore-codebuild-sources-418295705866-us-east-1
       s3_auto_create: false
       network_configuration:
         network_mode: PUBLIC
@@ -28,8 +28,8 @@ agents:
         idle_runtime_session_timeout: null
         max_lifetime: null
     bedrock_agentcore:
-      agent_id: null
-      agent_arn: null
+      agent_id: excel_mcp_oauth-H2LQqD8kpU
+      agent_arn: arn:aws:bedrock-agentcore:us-east-1:418295705866:runtime/excel_mcp_oauth-H2LQqD8kpU
       agent_session_id: null
     codebuild:
       project_name: null
@@ -48,9 +48,9 @@ agents:
       workload: null
     authorizer_configuration:
       customJWTAuthorizer:
-        discoveryUrl: https://cognito-idp.{region}.amazonaws.com/{user-pool-id}/.well-known/openid-configuration
+        discoveryUrl: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_AaIo0mR27/.well-known/openid-configuration
         allowedClients:
-        - '{your-client-id}'
+        - 48o70t8to7ovcbv5p5hidh3v0o
     request_header_configuration: null
     oauth_configuration: null
     api_key_env_var_name: null

@@ -9,13 +9,13 @@
 ### MCP Server Endpoint
 
 ```
-https://bedrock-agentcore.{region}.amazonaws.com/runtimes/{runtime-arn}/invocations?qualifier=DEFAULT
+https://bedrock-agentcore.us-east-1.amazonaws.com/runtimes/arn%3Aaws%3Abedrock-agentcore%3Aus-east-1%3A418295705866%3Aruntime%2Fexcel_mcp_oauth-H2LQqD8kpU/invocations?qualifier=DEFAULT
 ```
 
 ### Agent ARN
 
 ```
-arn:aws:bedrock-agentcore:{region}:{account-id}:runtime/{agent-id}
+arn:aws:bedrock-agentcore:us-east-1:418295705866:runtime/excel_mcp_oauth-H2LQqD8kpU
 ```
 
 ## Quick Suite 配置
@@ -26,19 +26,19 @@ arn:aws:bedrock-agentcore:{region}:{account-id}:runtime/{agent-id}
 |--------|-----|
 | **Connector** | Model Context Protocol |
 | **Authentication Type** | Service-to-service OAuth |
-| **Base URL** | `https://bedrock-agentcore.{region}.amazonaws.com/runtimes/{runtime-arn}/invocations?qualifier=DEFAULT` |
-| **Token URL** | `https://{cognito-domain}.auth.{region}.amazoncognito.com/oauth2/token` |
-| **Client ID** | `{your-client-id}` |
-| **Client Secret** | `{your-client-secret}` |
-| **Scope** | `{your-api-scope}/access` |
+| **Base URL** | `https://bedrock-agentcore.us-east-1.amazonaws.com/runtimes/arn%3Aaws%3Abedrock-agentcore%3Aus-east-1%3A418295705866%3Aruntime%2Fexcel_mcp_oauth-H2LQqD8kpU/invocations?qualifier=DEFAULT` |
+| **Token URL** | `https://excel-mcp-demo-pool.auth.us-east-1.amazoncognito.com/oauth2/token` |
+| **Client ID** | `48o70t8to7ovcbv5p5hidh3v0o` |
+| **Client Secret** | `fap80bagav3c9oeb3lth0l4v3tebi17a5l3fmvno0jgp21bsv4h` |
+| **Scope** | `excel-mcp-api/access` |
 
 ### OAuth 认证详情
 
 | 配置项 | 值 |
 |--------|-----|
-| **Cognito User Pool ID** | `{region}_{pool-id}` |
-| **Cognito Domain** | `{your-cognito-domain}` |
-| **Discovery URL** | `https://cognito-idp.{region}.amazonaws.com/{user-pool-id}/.well-known/openid-configuration` |
+| **Cognito User Pool ID** | `us-east-1_AaIo0mR27` |
+| **Cognito Domain** | `excel-mcp-demo-pool` |
+| **Discovery URL** | `https://cognito-idp.us-east-1.amazonaws.com/us-east-1_AaIo0mR27/.well-known/openid-configuration` |
 
 ## 可用工具
 
@@ -75,33 +75,33 @@ arn:aws:bedrock-agentcore:{region}:{account-id}:runtime/{agent-id}
 
 | 配置项 | 值 |
 |--------|-----|
-| **S3 Bucket** | `{your-s3-bucket}` |
+| **S3 Bucket** | `bedrock-agentcore-codebuild-sources-418295705866-us-east-1` |
 | **S3 Prefix** | `excel-downloads/` |
 | **链接有效期** | 3600 秒（1 小时） |
 
 ### IAM 权限
 
-AgentCore 执行角色需要以下 S3 权限：
+AgentCore 执行角色 `AmazonBedrockAgentCoreSDKRuntime-us-east-1-df8e088a86` 需要以下 S3 权限：
 
 ```json
 {
     "Effect": "Allow",
     "Action": ["s3:PutObject", "s3:GetObject"],
-    "Resource": "arn:aws:s3:::{your-bucket}/excel-downloads/*"
+    "Resource": "arn:aws:s3:::bedrock-agentcore-codebuild-sources-418295705866-us-east-1/excel-downloads/*"
 }
 ```
 
 添加权限命令：
 ```bash
 aws iam put-role-policy \
-  --role-name {your-execution-role} \
+  --role-name AmazonBedrockAgentCoreSDKRuntime-us-east-1-df8e088a86 \
   --policy-name S3ExcelDownloadsAccess \
   --policy-document '{
     "Version": "2012-10-17",
     "Statement": [{
         "Effect": "Allow",
         "Action": ["s3:PutObject", "s3:GetObject"],
-        "Resource": "arn:aws:s3:::{your-bucket}/excel-downloads/*"
+        "Resource": "arn:aws:s3:::bedrock-agentcore-codebuild-sources-418295705866-us-east-1/excel-downloads/*"
     }]
 }'
 ```
@@ -111,15 +111,15 @@ aws iam put-role-policy \
 ### 获取 OAuth Token
 
 ```bash
-TOKEN=$(curl -s -X POST "https://{cognito-domain}.auth.{region}.amazoncognito.com/oauth2/token" \
+TOKEN=$(curl -s -X POST "https://excel-mcp-demo-pool.auth.us-east-1.amazoncognito.com/oauth2/token" \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials&client_id={your-client-id}&client_secret={your-client-secret}&scope={your-scope}" | python3 -c "import sys,json; print(json.load(sys.stdin).get('access_token',''))")
+  -d "grant_type=client_credentials&client_id=48o70t8to7ovcbv5p5hidh3v0o&client_secret=fap80bagav3c9oeb3lth0l4v3tebi17a5l3fmvno0jgp21bsv4h&scope=excel-mcp-api/access" | python3 -c "import sys,json; print(json.load(sys.stdin).get('access_token',''))")
 ```
 
 ### 创建 Excel 并获取下载链接（推荐）
 
 ```bash
-curl -s -X POST "https://bedrock-agentcore.{region}.amazonaws.com/runtimes/{runtime-arn}/invocations?qualifier=DEFAULT" \
+curl -s -X POST "https://bedrock-agentcore.us-east-1.amazonaws.com/runtimes/arn%3Aaws%3Abedrock-agentcore%3Aus-east-1%3A418295705866%3Aruntime%2Fexcel_mcp_oauth-H2LQqD8kpU/invocations?qualifier=DEFAULT" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
@@ -141,7 +141,7 @@ curl -s -X POST "https://bedrock-agentcore.{region}.amazonaws.com/runtimes/{runt
 ### 列出工具
 
 ```bash
-curl -s -X POST "https://bedrock-agentcore.{region}.amazonaws.com/runtimes/{runtime-arn}/invocations?qualifier=DEFAULT" \
+curl -s -X POST "https://bedrock-agentcore.us-east-1.amazonaws.com/runtimes/arn%3Aaws%3Abedrock-agentcore%3Aus-east-1%3A418295705866%3Aruntime%2Fexcel_mcp_oauth-H2LQqD8kpU/invocations?qualifier=DEFAULT" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
@@ -162,7 +162,7 @@ curl -s -X POST "https://bedrock-agentcore.{region}.amazonaws.com/runtimes/{runt
 
 ```bash
 cd mcp-server
-EXCEL_FILES_PATH=/tmp/excel_files EXCEL_S3_BUCKET={your-bucket} python3 mcp_server.py
+EXCEL_FILES_PATH=/tmp/excel_files EXCEL_S3_BUCKET=bedrock-agentcore-codebuild-sources-418295705866-us-east-1 /opt/homebrew/bin/python3.10 mcp_server.py
 ```
 
 ### 测试本地服务器
@@ -224,13 +224,14 @@ https://cognito-idp.{region}.amazonaws.com/{user-pool-id}/.well-known/openid-con
 
 **解决方案:** 使用 RFC 5987 编码：`filename*=UTF-8''%E6%8A%A5%E4%BB%B7.xlsx`
 
-## AWS 资源配置示例
+## AWS 资源
 
-| 资源 | 说明 |
+| 资源 | 值 |
 |------|-----|
-| **AWS Account ID** | 你的 AWS 账户 ID |
-| **Region** | 部署区域（如 us-east-1） |
-| **Cognito User Pool ID** | Cognito 用户池 ID |
-| **Cognito Domain** | Cognito 域名前缀 |
-| **IAM Execution Role** | AgentCore 执行角色 |
-| **S3 Bucket** | 用于存储 Excel 文件的 S3 桶 |
+| **AWS Account ID** | `418295705866` |
+| **Region** | `us-east-1` |
+| **Cognito User Pool ID** | `us-east-1_AaIo0mR27` |
+| **Cognito Domain** | `excel-mcp-demo-pool` |
+| **IAM Execution Role** | `AmazonBedrockAgentCoreSDKRuntime-us-east-1-df8e088a86` |
+| **S3 Bucket** | `bedrock-agentcore-codebuild-sources-418295705866-us-east-1` |
+| **Agent ID** | `excel_mcp_oauth-H2LQqD8kpU` |

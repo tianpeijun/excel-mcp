@@ -15,11 +15,11 @@
 
 | 配置项 | 值 |
 |--------|-----|
-| **Base URL** | `https://bedrock-agentcore.{region}.amazonaws.com/runtimes/{runtime-arn}/invocations?qualifier=DEFAULT` |
-| **Token URL** | `https://{cognito-domain}.auth.{region}.amazoncognito.com/oauth2/token` |
-| **Client ID** | `{your-client-id}` |
-| **Client Secret** | `{your-client-secret}` |
-| **Scope** | `{your-api-scope}/access` |
+| **Base URL** | `https://bedrock-agentcore.us-east-1.amazonaws.com/runtimes/arn%3Aaws%3Abedrock-agentcore%3Aus-east-1%3A418295705866%3Aruntime%2Fexcel_mcp_oauth-H2LQqD8kpU/invocations?qualifier=DEFAULT` |
+| **Token URL** | `https://excel-mcp-demo-pool.auth.us-east-1.amazoncognito.com/oauth2/token` |
+| **Client ID** | `48o70t8to7ovcbv5p5hidh3v0o` |
+| **Client Secret** | `fap80bagav3c9oeb3lth0l4v3tebi17a5l3fmvno0jgp21bsv4h` |
+| **Scope** | `excel-mcp-api/access` |
 
 ### 推荐提示词
 
@@ -57,7 +57,7 @@
 
 ```bash
 cd mcp-server
-EXCEL_FILES_PATH=/tmp/excel_files EXCEL_S3_BUCKET={your-bucket} python3 mcp_server.py
+EXCEL_FILES_PATH=/tmp/excel_files /opt/homebrew/bin/python3.10 mcp_server.py
 ```
 
 ## 部署
@@ -72,12 +72,12 @@ agentcore deploy
 
 ```bash
 # 1. 获取 Token
-TOKEN=$(curl -s -X POST "https://{cognito-domain}.auth.{region}.amazoncognito.com/oauth2/token" \
+TOKEN=$(curl -s -X POST "https://excel-mcp-demo-pool.auth.us-east-1.amazoncognito.com/oauth2/token" \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=client_credentials&client_id={your-client-id}&client_secret={your-client-secret}&scope={your-scope}" | python3 -c "import sys,json; print(json.load(sys.stdin).get('access_token',''))")
+  -d "grant_type=client_credentials&client_id=48o70t8to7ovcbv5p5hidh3v0o&client_secret=fap80bagav3c9oeb3lth0l4v3tebi17a5l3fmvno0jgp21bsv4h&scope=excel-mcp-api/access" | python3 -c "import sys,json; print(json.load(sys.stdin).get('access_token',''))")
 
 # 2. 创建 Excel 并获取下载链接
-curl -s -X POST "https://bedrock-agentcore.{region}.amazonaws.com/runtimes/{runtime-arn}/invocations?qualifier=DEFAULT" \
+curl -s -X POST "https://bedrock-agentcore.us-east-1.amazonaws.com/runtimes/arn%3Aaws%3Abedrock-agentcore%3Aus-east-1%3A418295705866%3Aruntime%2Fexcel_mcp_oauth-H2LQqD8kpU/invocations?qualifier=DEFAULT" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \

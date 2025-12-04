@@ -41,7 +41,7 @@ os.makedirs("/tmp/excel_files", exist_ok=True)
 # S3 configuration for file downloads
 # Option 1: Set via environment variable EXCEL_S3_BUCKET
 # Option 2: Hardcode your bucket name below
-S3_BUCKET = os.environ.get("EXCEL_S3_BUCKET", "")  # Set your bucket name here or via env var
+S3_BUCKET = os.environ.get("EXCEL_S3_BUCKET", "bedrock-agentcore-codebuild-sources-418295705866-us-east-1")
 S3_PREFIX = os.environ.get("EXCEL_S3_PREFIX", "excel-downloads/")  # S3 key prefix
 PRESIGNED_URL_EXPIRY = int(os.environ.get("PRESIGNED_URL_EXPIRY", "3600"))  # 1 hour default
 

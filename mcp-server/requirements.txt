@@ -1,2 +1,3 @@
 mcp
 excel-mcp-server
+boto3
